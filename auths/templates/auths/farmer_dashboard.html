@@ -1,0 +1,82 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block title %}Farmer Dashboard{% endblock %}
+
+{% block content %}
+<div class="container mx-auto py-6 px-4">
+  <h2 class="text-2xl font-bold text-indigo-800 mb-4">👋 Welcome, {{ user.username|title }}</h2>
+
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+    <div class="bg-white rounded shadow p-4 text-center">
+      <p class="text-gray-600">Total Milk Supplied</p>
+      <h3 class="text-3xl font-bold text-green-600">{{ total_liters }} L</h3>
+    </div>
+    <div class="bg-white rounded shadow p-4 text-center">
+      <p class="text-gray-600">Total Payments</p>
+      <h3 class="text-3xl font-bold text-blue-600">KSh {{ total_paid }}</h3>
+    </div>
+    <div class="bg-white rounded shadow p-4 text-center">
+      <p class="text-gray-600">Pending Balance</p>
+      <h3 class="text-3xl font-bold text-red-500">KSh {{ total_liters|floatformat:2|add:"-total_paid"|floatformat:2 }}</h3>
+    </div>
+  </div>
+
+  <!-- Milk Contribution Table -->
+  <div class="bg-white shadow rounded mb-6">
+    <div class="p-4 border-b">
+      <h4 class="font-semibold text-lg text-indigo-700">Milk Contribution History</h4>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto text-sm">
+        <thead class="bg-indigo-100 text-indigo-800 font-semibold">
+          <tr>
+            <th class="p-2 text-left">Date</th>
+            <th class="p-2 text-left">Liters</th>
+            <th class="p-2 text-left">Rate (KSh)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in milk_records %}
+          <tr class="border-b hover:bg-indigo-50">
+            <td class="p-2">{{ record.date }}</td>
+            <td class="p-2">{{ record.liters }}</td>
+            <td class="p-2">{{ record.rate }}</td>
+          </tr>
+          {% empty %}
+          <tr><td class="p-4 text-center text-gray-500" colspan="3">No milk records found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Payment Table -->
+  <div class="bg-white shadow rounded">
+    <div class="p-4 border-b">
+      <h4 class="font-semibold text-lg text-indigo-700">Payment History</h4>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full table-auto text-sm">
+        <thead class="bg-green-100 text-green-800 font-semibold">
+          <tr>
+            <th class="p-2 text-left">Date Paid</th>
+            <th class="p-2 text-left">Amount</th>
+            <th class="p-2 text-left">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pay in payments %}
+          <tr class="border-b hover:bg-green-50">
+            <td class="p-2">{{ pay.date_paid }}</td>
+            <td class="p-2">KSh {{ pay.amount_paid }}</td>
+            <td class="p-2 text-green-600 font-medium">Paid</td>
+          </tr>
+          {% empty %}
+          <tr><td class="p-4 text-center text-gray-500" colspan="3">No payments found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

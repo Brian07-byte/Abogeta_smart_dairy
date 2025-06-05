@@ -1,0 +1,26 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block content %}
+  <h1>Edit User: {{ user.username }}</h1>
+
+  <form method="post">
+    {% csrf_token %}
+
+    <label for="username">Username:</label><br>
+    <input type="text" id="username" name="username" value="{{ user.username }}" required><br><br>
+
+    <label for="email">Email:</label><br>
+    <input type="email" id="email" name="email" value="{{ user.email }}" required><br><br>
+
+    <label for="role">Role:</label><br>
+    <select id="role" name="role" required>
+      <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+      <option value="farmer" {% if user.role == 'farmer' %}selected{% endif %}>Farmer</option>
+      <option value="collector" {% if user.role == 'collector' %}selected{% endif %}>Collector</option>
+    </select><br><br>
+
+    <button type="submit">Save Changes</button>
+  </form>
+
+  <p><a href="{% url 'admin_dashboard:manage_users' %}">Back to Manage Users</a></p>
+{% endblock %}

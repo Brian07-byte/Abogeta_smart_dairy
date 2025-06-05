@@ -1,0 +1,26 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block title %}Collector Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+  <h2 class="mb-4">Welcome, {{ request.user.first_name }}!</h2>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card text-bg-primary">
+        <div class="card-body">
+          <h5 class="card-title">Today's Milk Collected</h5>
+          <p class="card-text fs-4">320 Liters</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card text-bg-secondary">
+        <div class="card-body">
+          <h5 class="card-title">Farmers Visited</h5>
+          <p class="card-text fs-4">12 Farms</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

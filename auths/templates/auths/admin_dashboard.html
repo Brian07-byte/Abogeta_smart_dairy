@@ -1,0 +1,57 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 p-6">
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white p-4 rounded-xl shadow-md">
+      <h4 class="text-gray-500">Milk Collected</h4>
+      <p class="text-2xl font-bold text-indigo-600">4,120 L</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-md">
+      <h4 class="text-gray-500">Active Farmers</h4>
+      <p class="text-2xl font-bold text-green-600">56</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-md">
+      <h4 class="text-gray-500">Pending Orders</h4>
+      <p class="text-2xl font-bold text-yellow-600">3</p>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-md">
+      <h4 class="text-gray-500">Stock Remaining</h4>
+      <p class="text-2xl font-bold text-blue-600">75%</p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+    <div class="bg-white p-4 rounded-xl shadow-md">
+      <h4 class="text-lg font-semibold mb-2">📊 Milk Collection Trend</h4>
+      <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+        Chart Placeholder
+      </div>
+    </div>
+    <div class="bg-white p-4 rounded-xl shadow-md">
+      <h4 class="text-lg font-semibold mb-2">📦 Supplement Usage</h4>
+      <div class="h-64 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400">
+        Chart Placeholder
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white p-4 rounded-xl shadow-md mb-6">
+    <h4 class="text-lg font-semibold mb-3">🧾 Recent Activity</h4>
+    <ul class="text-sm text-gray-600 space-y-2">
+      <li>✅ Farmer John collected 120L - 5 mins ago</li>
+      <li>📥 Order from Mary for 50kg feed - Pending</li>
+      <li>✔️ Supplement stock updated - Today</li>
+    </ul>
+  </div>
+
+  <div class="flex gap-4">
+    <a href="" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-xl">Manage Inventory</a>
+    <a href="" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-xl">View Orders</a>
+    <a href="" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-xl">Analytics</a>
+    <a href="" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl">Download Report</a>
+  </div>
+</div>
+{% endblock %}

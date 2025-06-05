@@ -1,0 +1,10 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block content %}
+  <h1>View User</h1>
+  <p>Username: {{ user.username }}</p>
+  <p>Email: {{ user.email }}</p>
+  <p>Role: {{ user.role }}</p>
+  <p>Active: {{ user.is_active }}</p>
+  <a href="{% url 'admin_dashboard:manage_users' %}">Back to Manage Users</a>
+{% endblock %}
