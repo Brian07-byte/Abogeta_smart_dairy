@@ -1,0 +1,68 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+<form method="get" class="mb-4 flex gap-4 items-end">
+  <div>
+    <label class="block text-gray-700 text-sm">Filter by Username</label>
+    <input type="text" name="user" value="{{ query_user }}" class="border rounded p-2 w-48" placeholder="e.g. john">
+  </div>
+  <div>
+    <label class="block text-gray-700 text-sm">Filter by Date</label>
+    <input type="date" name="date" value="{{ query_date }}" class="border rounded p-2">
+  </div>
+  <div>
+    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Filter</button>
+    <a href="{% url 'admin_dashboard:milk_overview' %}" class="ml-2 text-gray-600 hover:underline">Reset</a>
+  </div>
+</form>
+
+<div class="p-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6">🥛 Milk Collection Overview</h2>
+
+  <div class="mb-4 grid grid-cols-2 gap-4">
+    <div class="bg-white p-4 rounded shadow text-green-700">
+      <p class="text-sm">Total Milk Collected</p>
+      <p class="text-2xl font-bold">{{ total_milk }} L</p>
+    </div>
+    <div class="bg-white p-4 rounded shadow text-blue-700">
+      <p class="text-sm">Total Earnings</p>
+      <p class="text-2xl font-bold">Ksh{{ total_earnings }}</p>
+    </div>
+  </div>
+
+  <table class="w-full border text-sm bg-white shadow rounded">
+    <thead class="bg-gray-100 text-left text-gray-700">
+      <tr>
+        <th class="p-3">#</th>
+        <th class="p-3">Collector</th>
+        <th class="p-3">Quantity (L)</th>
+        <th class="p-3">Fat %</th>
+        <th class="p-3">Rate (Ksh)</th>
+        <th class="p-3">Total (Ksh)</th>
+        <th class="p-3">Date</th>
+        <th class="p-3">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in collections %}
+      <tr class="border-t hover:bg-gray-50">
+        <td class="p-3">{{ forloop.counter }}</td>
+        <td class="p-3">{{ c.collector.username }}</td>
+        <td class="p-3">{{ c.quantity_litres }}</td>
+        <td class="p-3">{{ c.fat_content }}%</td>
+        <td class="p-3">Ksh{{ c.price_per_litre }}</td>
+        <td class="p-3">Ksh{{ c.total_price }}</td>
+        <td class="p-3">{{ c.date_collected }}</td>
+        <td class="p-3 space-x-2">
+          <a href="{% url 'admin_dashboard:milk_edit' c.id %}" class="text-yellow-600 hover:underline">Edit</a>
+          <a href="{% url 'admin_dashboard:milk_delete' c.id %}" onclick="return confirm('Delete this record?')" class="text-red-600 hover:underline">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="8" class="text-center p-4 text-gray-400">No milk collections found.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

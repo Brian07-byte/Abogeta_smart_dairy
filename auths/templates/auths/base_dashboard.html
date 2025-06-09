@@ -5,152 +5,50 @@
   <meta charset="UTF-8" />
   <title>{% block title %}Dashboard{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Tailwind CSS & Google Fonts -->
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&display=swap" rel="stylesheet" />
-
-  <!-- Tailwind Custom Config -->
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            poppins: ['Poppins', 'sans-serif'],
-            merriweather: ['Merriweather', 'serif'],
-          },
-          colors: {
-            primary: {
-              DEFAULT: '#2563EB', // blue-600
-              light: '#3B82F6',   // blue-500
-              dark: '#1D4ED8',    // blue-700
-            },
-            accent: {
-              DEFAULT: '#7C3AED', // purple-700
-              light: '#A78BFA',   // purple-400
-              dark: '#5B21B6',    // purple-800
-            },
-            graylight: '#F9FAFB',
-            grayed: '#6B7280', // gray-500
-          },
-          boxShadow: {
-            'soft-lg': '0 10px 15px -3px rgba(37, 99, 235, 0.1), 0 4px 6px -2px rgba(37, 99, 235, 0.05)',
-          },
-        },
-      },
-    }
-  </script>
-
-  <!-- Font Awesome for Icons -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet" />
-
-  <style>
-    /* Fix sidebar and navbar height to viewport height */
-    /* Sidebar fixed on left */
-    aside {
-      position: fixed;
-      top: 0;
-      left: 0;
-      height: 100vh;
-      width: 16rem; /* 64 */
-      overflow-y: auto;
-      z-index: 60;
-    }
-
-    /* Navbar fixed at top, shifted right by sidebar width */
-    nav.dashboard-navbar {
-      position: fixed;
-      top: 0;
-      left: 16rem; /* same width as sidebar */
-      right: 0;
-      z-index: 70;
-    }
-
-    /* Main content: margin left = sidebar width, padding top = navbar height */
-    main {
-      margin-left: 16rem;
-      padding-top: 5.5rem; /* Adjust to navbar height */
-      min-height: 100vh;
-    }
-
-    /* Adjust height and overflow for main content to allow scroll */
-    main > .content-wrapper {
-      min-height: calc(100vh - 5.5rem);
-      overflow-y: auto;
-      padding: 2rem;
-    }
-  </style>
 </head>
 
-<body class="bg-graylight font-poppins text-gray-800 min-h-screen">
+<body class="bg-gray-100 font-poppins text-gray-800 min-h-screen">
+  <div class="flex">
 
-  <!-- Sidebar -->
-  <aside class="bg-white border-r border-gray-200 shadow-soft-lg p-8 space-y-6 flex flex-col">
-    <h2 class="text-2xl font-semibold text-primary-dark mb-6 select-none flex items-center gap-2">
-      <span class="text-3xl">📋</span> Menu
-    </h2>
-    <ul class="flex-1 space-y-3 overflow-auto">
-      {% if user_role == 'farmer' %}
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">🏠 Dashboard</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">🥛 My Milk Records</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">🛒 Order Supplements</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">💰 Payment Status</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">📬 Notifications</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">✉️ Feedback</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-semibold bg-primary-dark text-white rounded-lg shadow hover:bg-primary-dark/90 transition focus:outline-none focus:ring-2 focus:ring-primary-light" href="{% url 'profile' %}">👤 Profile</a></li>
+    <!-- Sidebar (fixed) -->
+    <aside class="w-64 bg-white shadow-lg border-r border-gray-200 h-screen fixed top-0 left-0 z-30">
+      {% include 'includes/sidebar.html' %}
+    </aside>
 
-      {% elif user_role == 'collector' %}
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">🏠 Dashboard</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">📋 Submit Milk Records</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">👨‍🌾 Farmers List</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">📊 Collection History</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-semibold bg-primary-dark text-white rounded-lg shadow hover:bg-primary-dark/90 transition focus:outline-none focus:ring-2 focus:ring-primary-light" href="{% url 'profile' %}">👤 Profile</a></li>
+    <!-- Main Section -->
+    <div class="flex-1 ml-64 flex flex-col min-h-screen">
 
-      {% elif user_role == 'admin' %}
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">🏠 Dashboard</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="{% url 'admin_dashboard:manage_users' %}
-">👤 Manage Users</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">🥛 Milk Overview</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">💳 Payments</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">📦 Inventory</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">📊 Analytics</a></li>
-        <li><a class="block px-4 py-3 rounded-lg font-medium text-primary-dark hover:bg-primary-light hover:text-white transition focus:outline-none focus:ring-2 focus:ring-primary-dark focus:ring-offset-1" href="#">📨 Messages</a></li>
-      {% endif %}
-    </ul>
+      <!-- Navbar -->
+      <header class="bg-white shadow sticky top-0 z-10">
+        {% include 'auths/dashboard_navbar.html' %}
+      </header>
 
-    <!-- Optional Footer Info -->
-    <div class="text-center text-sm text-gray-400 mt-auto select-none">
-      © {{ now.year }} Smart Dairy System
-    </div>
-  </aside>
+      <!-- Main Content -->
+      <main class="flex-1 p-6 overflow-y-auto bg-gray-50 transition-all duration-300">
+        {% if messages %}
+          <div class="mb-6 space-y-4">
+            {% for message in messages %}
+              <div class="p-4 rounded-lg shadow-md border-l-4
+                {% if message.tags == 'success' %}
+                  border-green-500 bg-green-100 text-green-800
+                {% elif message.tags == 'error' %}
+                  border-red-500 bg-red-100 text-red-800
+                {% else %}
+                  border-blue-500 bg-blue-100 text-blue-800
+                {% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
 
-  <!-- Navbar -->
-  {% include 'auths/dashboard_navbar.html' %}
-
-  <!-- Main Content -->
-  <main>
-    <div class="content-wrapper">
-      <!-- Django Messages -->
-      {% if messages %}
-        <div class="mb-6 space-y-4">
-          {% for message in messages %}
-            <div class="p-4 rounded-lg shadow-sm border-l-4
-              {% if message.tags == 'success' %}border-green-500 bg-green-50 text-green-700
-              {% elif message.tags == 'error' %}border-red-500 bg-red-50 text-red-700
-              {% else %}border-blue-500 bg-blue-50 text-blue-700{% endif %}">
-              {{ message }}
-            </div>
-          {% endfor %}
+        <div class="container mx-auto">
+          {% block content %}{% endblock %}
         </div>
-      {% endif %}
-
-      {% block content %}
-      <!-- Page-specific content here -->
-      {% endblock %}
+      </main>
     </div>
-  </main>
-
+  </div>
 </body>
 </html>

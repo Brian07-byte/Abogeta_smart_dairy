@@ -1,0 +1,48 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+<div class="max-w-3xl mx-auto p-6">
+  <h2 class="text-2xl font-bold mb-4 text-gray-800">💰 Payment History for {{ user.username }} ({{ role|title }})</h2>
+
+  <form method="post" class="mb-6 bg-gray-50 p-4 rounded shadow">
+    {% csrf_token %}
+    <div class="mb-2">
+      <label class="block text-gray-700">Amount (Ksh)</label>
+      {{ form.amount }}
+    </div>
+    <div class="mb-2">
+      <label class="block text-gray-700">Method</label>
+      {{ form.method }}
+    </div>
+    <div class="mb-2">
+      <label class="block text-gray-700">Remarks</label>
+      {{ form.remarks }}
+    </div>
+    <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Add Payment</button>
+  </form>
+
+  <table class="w-full border bg-white text-sm shadow">
+    <thead class="bg-gray-100">
+      <tr>
+        <th class="p-2 text-left">Date</th>
+        <th class="p-2 text-left">Amount (Ksh)</th>
+        <th class="p-2 text-left">Method</th>
+        <th class="p-2 text-left">Remarks</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in payments %}
+      <tr class="border-t hover:bg-gray-50">
+        <td class="p-2">{{ p.date_paid }}</td>
+        <td class="p-2">Ksh {{ p.amount }}</td>
+        <td class="p-2">{{ p.method }}</td>
+        <td class="p-2">{{ p.remarks }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-gray-400 p-4">No payments recorded yet.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

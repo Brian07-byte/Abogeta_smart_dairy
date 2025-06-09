@@ -1,0 +1,47 @@
+{% extends 'auths/base_dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Record Payment</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="border p-4 rounded bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="user" class="form-label">Select User</label>
+            <select name="user" class="form-control" required>
+                <option value="">-- Select --</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="payee_role" class="form-label">Role</label>
+            <select name="payee_role" class="form-control" required>
+                <option value="collector">Collector</option>
+                <option value="farmer">Farmer</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="method" class="form-label">Payment Method</label>
+            <input type="text" name="method" class="form-control" placeholder="e.g. Cash, Mpesa, Bank" required>
+        </div>
+
+        <div class="mb-3">
+            <label for="remarks" class="form-label">Remarks</label>
+            <textarea name="remarks" class="form-control" placeholder="Optional..."></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success">Submit Payment</button>
+    </form>
+</div>
+{% endblock %}

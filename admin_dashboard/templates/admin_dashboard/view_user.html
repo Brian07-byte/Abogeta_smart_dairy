@@ -1,10 +1,46 @@
 {% extends 'auths/base_dashboard.html' %}
-
 {% block content %}
-  <h1>View User</h1>
-  <p>Username: {{ user.username }}</p>
-  <p>Email: {{ user.email }}</p>
-  <p>Role: {{ user.role }}</p>
-  <p>Active: {{ user.is_active }}</p>
-  <a href="{% url 'admin_dashboard:manage_users' %}">Back to Manage Users</a>
+<div class="p-6 max-w-3xl mx-auto">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6 flex items-center gap-2">
+    👤 <span>View User Details</span>
+  </h2>
+
+  <div class="bg-white rounded-2xl shadow-md p-6 space-y-6 border border-gray-100">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-base">
+      <div>
+        <p class="font-semibold text-gray-500">Username</p>
+        <p class="text-lg font-medium">{{ user.username }}</p>
+      </div>
+      <div>
+        <p class="font-semibold text-gray-500">Email</p>
+        <p class="text-lg font-medium">{{ user.email }}</p>
+      </div>
+      <div>
+        <p class="font-semibold text-gray-500">Role</p>
+        <p class="text-lg font-medium capitalize">{{ user.role }}</p>
+      </div>
+      <div>
+        <p class="font-semibold text-gray-500">Status</p>
+        <p class="text-lg font-medium">
+          {% if user.is_active %}
+            <span class="text-green-600">Active</span>
+          {% else %}
+            <span class="text-red-600">Inactive</span>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    <div class="pt-4 border-t border-gray-200 flex items-center justify-between">
+      <a href="{% url 'admin_dashboard:edit_user' user.id %}"
+         class="inline-block text-sm px-4 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
+        ✏️ Edit User
+      </a>
+      <a href="{% url 'admin_dashboard:manage_users' %}"
+         class="inline-block text-sm px-4 py-2 text-gray-600 hover:text-gray-800 transition">
+        ← Back to User List
+      </a>
+    </div>
+  </div>
+</div>
 {% endblock %}
