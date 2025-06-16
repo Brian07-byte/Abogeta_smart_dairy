@@ -40,10 +40,13 @@ INSTALLED_APPS = [
     # installed apps
      'auths',
      'admin_dashboard',
+     'farmer',
     'crispy_forms',
     'widget_tweaks',
     'simple_history',
     'user_agents',
+    
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +67,7 @@ ROOT_URLCONF = 'dairy_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -72,6 +75,9 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'auths.context_processors.notification_context',  # ✅ Add this line
+                'auths.context_processors.feedback_count', #added
+                'auths.context_processors.cart_item_count', # added
             ],
         },
     },
@@ -115,17 +121,22 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Nairobi'
 
 USE_I18N = True
 
 USE_TZ = True
 
 
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -134,5 +145,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'auths.CustomUser'
 
+
 LOGIN_URL = 'login'
+
 

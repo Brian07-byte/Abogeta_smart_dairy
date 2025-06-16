@@ -1,0 +1,101 @@
+{% extends "auths/admin_dashboard.html" %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto bg-white p-8 rounded shadow mt-10">
+  <h1 class="text-3xl font-bold mb-6 text-green-700">🛒 Checkout</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="bg-yellow-100 text-yellow-800 px-4 py-3 mb-4 rounded">
+        {{ message }}
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Order Summary -->
+  <h2 class="text-xl font-semibold text-gray-800 mb-4">🧾 Your Cart</h2>
+  <div class="overflow-x-auto">
+    <table class="min-w-full text-sm border border-gray-200 mb-6">
+      <thead class="bg-gray-100 text-left">
+        <tr>
+          <th class="py-2 px-4 border-b">Supplement</th>
+          <th class="py-2 px-4 border-b">Unit Price</th>
+          <th class="py-2 px-4 border-b">Qty</th>
+          <th class="py-2 px-4 border-b">Discount</th>
+          <th class="py-2 px-4 border-b">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in cart_items %}
+        <tr class="border-t">
+          <td class="py-2 px-4">{{ item.supplement.name }}</td>
+          <td class="py-2 px-4">KSh {{ item.price_at_order }}</td>
+          <td class="py-2 px-4">{{ item.quantity }}</td>
+          <td class="py-2 px-4">{{ item.discount_applied }}%</td>
+          <td class="py-2 px-4">KSh {{ item.get_total_price|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+        <tr class="font-bold bg-gray-50 border-t">
+          <td colspan="4" class="py-2 px-4 text-right">Total:</td>
+          <td class="py-2 px-4 text-green-700">KSh {{ total_price|floatformat:2 }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  {% if user.role == 'farmer' %}
+  <div class="bg-blue-50 text-blue-900 px-4 py-3 rounded mb-6">
+    <strong>💰 Milk Earnings Available:</strong> KSh {{ unpaid_earnings|floatformat:2 }}
+  </div>
+  {% endif %}
+
+  <!-- Checkout Form -->
+  <form method="post" id="checkout-form" class="space-y-6">
+    {% csrf_token %}
+    <div>
+      <label class="block font-semibold mb-2">Select Payment Method:</label>
+      <div class="space-x-6">
+        <label class="inline-flex items-center">
+          <input type="radio" name="payment_method" value="deduction" class="mr-2" required>
+          Use Milk Earnings
+        </label>
+        <label class="inline-flex items-center">
+          <input type="radio" name="payment_method" value="mpesa" class="mr-2">
+          Pay with M-Pesa
+        </label>
+      </div>
+    </div>
+
+    <!-- M-Pesa Field -->
+    <div id="mpesa-form" class="hidden">
+      <label for="mpesa_phone" class="block mb-2 font-medium">M-Pesa Phone Number:</label>
+      <input type="text" name="mpesa_phone" id="mpesa_phone" placeholder="e.g. 0712345678"
+        class="w-full border border-gray-300 rounded px-4 py-2 focus:outline-none focus:ring focus:border-blue-300">
+    </div>
+
+    <button type="submit"
+      class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded font-semibold transition">
+       Confirm & Place Order
+    </button>
+  </form>
+</div>
+
+<!-- JS to toggle M-Pesa input -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const mpesaForm = document.getElementById("mpesa-form");
+    const radios = document.querySelectorAll("input[name='payment_method']");
+
+    radios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.value === "mpesa" && radio.checked) {
+          mpesaForm.classList.remove("hidden");
+        } else {
+          mpesaForm.classList.add("hidden");
+        }
+      });
+    });
+  });
+</script>
+{% endblock %}

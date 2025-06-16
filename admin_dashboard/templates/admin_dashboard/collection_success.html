@@ -1,0 +1,12 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block title %}Success{% endblock %}
+
+{% block content %}
+    <div class="container mt-4">
+        <div class="alert alert-success">
+            <h4>Milk collection was recorded successfully!</h4>
+            <a href="{% url 'admin_dashboard:collect_milk' %}" class="btn btn-primary mt-3">Record Another</a>
+        </div>
+    </div>
+{% endblock %}

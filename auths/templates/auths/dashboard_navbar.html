@@ -1,9 +1,10 @@
-<!-- templates/auths/dashboard_navbar.html -->
-<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-purple-700 to-indigo-600 shadow-md">
-  <!-- Scrolling Headline -->
-  <div class="overflow-hidden whitespace-nowrap py-2">
-    <div class="inline-block animate-scroll-left text-white font-semibold uppercase tracking-wide px-6 select-none">
-      🌟 Welcome to the Smart Dairy System Dashboard – Empowering Farmers, Collectors & Admins for Efficient Milk Management!
+{% load humanize %}
+
+<nav class="sticky top-0 z-50 bg-gradient-to-r from-blue-600 via-purple-700 to-indigo-600 shadow-md font-sans">
+  <!-- Rotating Banner -->
+  <div id="banner-container" class="text-white font-semibold text-sm uppercase tracking-wide select-none relative">
+    <div id="banner-rotator" class="transition-opacity duration-1000 ease-in-out text-center py-2" style="min-height: 24px;">
+      <!-- JS will populate this -->
     </div>
   </div>
 
@@ -27,9 +28,11 @@
           aria-controls="alertsDropdown"
         >
           🔔
-          <span class="absolute top-0 right-0 -mt-1 -mr-1 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-yellow-900 bg-yellow-400 rounded-full">
-            {{ user.notifications_count|default:"0" }}
-          </span>
+          {% if user_notifications_count > 0 %}
+            <span class="absolute top-0 right-0 -mt-1 -mr-1 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-yellow-900 bg-yellow-400 rounded-full">
+              {{ user_notifications_count }}
+            </span>
+          {% endif %}
         </button>
 
         <ul
@@ -37,18 +40,37 @@
           class="hidden absolute right-0 mt-2 w-72 bg-white rounded shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden z-40"
           role="menu"
         >
-          {% if user.notifications %}
-            {% for notification in user.notifications %}
+          {% if user_notifications %}
+            {% for notification in user_notifications %}
               <li>
-                <a href="{{ notification.link }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100" role="menuitem">
+                <a
+                  href="{% url 'read_notification' notification.pk %}"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100"
+                  role="menuitem"
+                >
                   {{ notification.message }}
+                  <br>
+                  <span class="text-xs text-gray-400">{{ notification.timestamp|naturaltime }}</span>
                 </a>
               </li>
             {% endfor %}
           {% else %}
-            <li><span class="block px-4 py-2 text-sm text-gray-500">No alerts</span></li>
+            <li>
+              <span class="block px-4 py-2 text-sm text-gray-500">No alerts</span>
+            </li>
           {% endif %}
         </ul>
+      </div>
+
+      <!-- Cart Icon with Count -->
+      <div class="relative">
+        <a href="{% url 'view_cart' %}" class="relative text-white focus:outline-none" aria-label="View cart">
+          🛒
+          <span id="cart-count"
+                class="absolute -top-2 -right-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-white bg-red-600 rounded-full {% if cart_item_count == 0 %}hidden{% endif %}">
+            {{ cart_item_count }}
+          </span>
+        </a>
       </div>
 
       <!-- User Profile -->
@@ -70,23 +92,54 @@
   </div>
 </nav>
 
-<!-- Tailwind animation keyframes -->
-<style>
-  @keyframes scroll-left {
-    0% {
-      transform: translateX(100%);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
+<!-- Banner Rotation Script -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const banners = [
+      { icon: "", text: "Welcome to Smart Dairy System Dashboard!", bg: "bg-indigo-800" },
+      { icon: "", text: "Track Your Milk Deliveries & Earnings in Real Time.", bg: "bg-blue-700" },
+      { icon: "", text: "Order Animal Supplements with One Click!", bg: "bg-green-600" },
+      { icon: "", text: "Monitor Your Payments — Transparent & Instant.", bg: "bg-yellow-600" },
+      { icon: "", text: "Receive Alerts and Notifications Instantly.", bg: "bg-pink-600" },
+      { icon: "", text: "Get Reports on Milk Collection Trends.", bg: "bg-purple-700" },
+      { icon: "", text: "Empowering Farmers for a Smarter Tomorrow.", bg: "bg-emerald-700" },
+      { icon: "", text: "Stay Updated with Real-time Notifications.", bg: "bg-orange-600" },
+      { icon: "", text: "Reliable. Transparent. Fast. Always.", bg: "bg-teal-700" },
+      { icon: "", text: "Revolutionizing Dairy with Technology!", bg: "bg-rose-600" },
+    ];
 
-  .animate-scroll-left {
-    animation: scroll-left 20s linear infinite;
-  }
-</style>
+    let index = 0;
+    let isPaused = false;
+    const rotator = document.getElementById("banner-rotator");
+    const container = document.getElementById("banner-container");
 
-<!-- Alerts Dropdown Toggle Script -->
+    function setBanner(banner) {
+      rotator.style.opacity = 0;
+
+      setTimeout(() => {
+        container.className = banner.bg + " text-white font-semibold text-sm uppercase tracking-wide select-none relative";
+        rotator.innerHTML = `<span class="inline-flex items-center gap-2">${banner.icon} ${banner.text}</span>`;
+        rotator.style.opacity = 1;
+      }, 500);
+    }
+
+    // Initial banner
+    setBanner(banners[index]);
+
+    let interval = setInterval(() => {
+      if (!isPaused) {
+        index = (index + 1) % banners.length;
+        setBanner(banners[index]);
+      }
+    }, 3000);
+
+    // Pause on hover
+    rotator.addEventListener('mouseenter', () => isPaused = true);
+    rotator.addEventListener('mouseleave', () => isPaused = false);
+  });
+</script>
+
+<!-- Alerts Dropdown Toggle -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const alertsBtn = document.getElementById('alertsDropdownBtn');

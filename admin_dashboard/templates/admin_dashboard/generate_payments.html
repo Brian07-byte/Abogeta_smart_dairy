@@ -1,0 +1,86 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+
+<div class="max-w-4xl mx-auto py-10 px-4">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h2 class="text-2xl font-bold text-indigo-700 mb-4"> Payment Generation Preview</h2>
+
+
+        <div class="space-y-8">
+            {% if unpaid_farmers %}
+            <div>
+                <h3 class="text-xl font-semibold text-green-600 mb-2"> Farmers</h3>
+                <table class="min-w-full text-sm text-left border border-gray-200">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th class="p-2">Name</th>
+                            <th class="p-2">Deliveries</th>
+                            <th class="p-2">Gross (KES)</th>
+                            <th class="p-2">Deduction</th>
+                            <th class="p-2">Net</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for f in unpaid_farmers %}
+                        <tr class="border-t">
+                            <td class="p-2">{{ f.user.get_full_name|default:f.user.username }}</td>
+                            <td class="p-2">{{ f.count }}</td>
+                            <td class="p-2">KES {{ f.gross }}</td>
+                            <td class="p-2">KES {{ f.deduction }}</td>
+                            <td class="p-2 font-semibold text-green-700">KES {{ f.net }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            {% if unpaid_collectors %}
+            <div>
+                <h3 class="text-xl font-semibold text-blue-600 mb-2">Collectors</h3>
+                <table class="min-w-full text-sm text-left border border-gray-200">
+                    <thead class="bg-gray-100 text-gray-700">
+                        <tr>
+                            <th class="p-2">Name</th>
+                            <th class="p-2">Collections</th>
+                            <th class="p-2">Gross (KES)</th>
+                            <th class="p-2">Deduction</th>
+                            <th class="p-2">Net</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for c in unpaid_collectors %}
+                        <tr class="border-t">
+                            <td class="p-2">{{ c.user.get_full_name|default:c.user.username }}</td>
+                            <td class="p-2">{{ c.count }}</td>
+                            <td class="p-2">KES {{ c.gross }}</td>
+                            <td class="p-2">KES {{ c.deduction }}</td>
+                            <td class="p-2 font-semibold text-blue-700">KES {{ c.net }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if unpaid_farmers or unpaid_collectors %}
+        <form method="POST" class="mt-6">
+            {% csrf_token %}
+            <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded-md shadow w-full">
+                 Confirm & Generate Payments
+            </button>
+        </form>
+        {% else %}
+
+        {% endif %}
+
+        <div class="mt-4 text-sm">
+            <a href="{% url 'admin_dashboard:payment_overview' %}" class="text-indigo-500 hover:underline">
+                ← Back to Payment Overview
+            </a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

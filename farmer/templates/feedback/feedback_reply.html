@@ -1,0 +1,9 @@
+{% extends 'auths/admin_dashboard.html' %}
+{% block content %}
+<h2>Reply to Feedback</h2>
+<p><strong>Message:</strong> {{ feedback.message }}</p>
+<form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send Reply</button>
+</form>
+{% endblock %}

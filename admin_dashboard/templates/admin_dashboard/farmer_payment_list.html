@@ -1,0 +1,44 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold text-green-700 mb-6"> Farmer Payments List</h2>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+            <thead class="bg-green-100 text-green-800 uppercase">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">Farmer</th>
+                    <th class="px-4 py-3 text-left font-semibold">Total Gross</th>
+                    <th class="px-4 py-3 text-left font-semibold">Total Deduction</th>
+                    <th class="px-4 py-3 text-left font-semibold">Total Net</th>
+                    <th class="px-4 py-3 text-left font-semibold">Payments</th>
+                    <th class="px-4 py-3 text-left font-semibold">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for item in farmer_data %}
+                <tr class="hover:bg-green-50 transition">
+                    <td class="px-4 py-3 font-medium">{{ item.farmer.full_name }}</td>
+                    <td class="px-4 py-3">KES {{ item.total_gross }}</td>
+                    <td class="px-4 py-3 text-red-500">KES {{ item.total_deductions }}</td>
+                    <td class="px-4 py-3 text-green-600">KES {{ item.total_net }}</td>
+                    <td class="px-4 py-3">{{ item.payment_count }}</td>
+                    <td class="px-4 py-3">
+                        <a href="{% url 'admin_dashboard:farmer_payment_detail' item.farmer.id %}"
+                           class="inline-block bg-blue-600 text-white px-3 py-1 rounded text-sm font-medium hover:bg-blue-700 transition">
+                            View Details
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-6 text-gray-400 italic">No farmers with payments.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

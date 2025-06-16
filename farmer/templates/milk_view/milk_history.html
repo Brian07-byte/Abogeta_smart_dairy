@@ -1,0 +1,100 @@
+{% extends 'auths/base_dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mx-auto px-4 py-6">
+  <h2 class="text-2xl font-bold mb-4">🥛 My Milk Records</h2>
+
+  <!-- Filter Section -->
+  <form method="GET" class="mb-6 flex flex-wrap gap-2 items-end">
+    <div>
+      <label for="month" class="block text-sm font-semibold">Month:</label>
+      <select name="month" id="month" class="border rounded px-3 py-1">
+        <option value="">-- All --</option>
+        {% for m in months %}
+          <option value="{{ m }}" {% if month == m|stringformat:"s" %}selected{% endif %}>{{ m }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <div>
+      <label for="year" class="block text-sm font-semibold">Year:</label>
+      <select name="year" id="year" class="border rounded px-3 py-1">
+        <option value="">-- All --</option>
+        {% for y in years %}
+          <option value="{{ y }}" {% if year == y|stringformat:"s" %}selected{% endif %}>{{ y }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded hover:bg-blue-700">Filter</button>
+  </form>
+
+  <!-- Summary -->
+  <div class="mb-4 text-sm text-gray-700">
+    <strong>Total Litres:</strong> {{ total_litres }} L |
+    <strong>Total Earnings:</strong> KSh {{ total_earnings }}
+  </div>
+
+  <!-- Records Table -->
+  {% if page_obj %}
+  <div class="overflow-x-auto bg-white rounded shadow">
+    <table class="min-w-full table-auto">
+      <thead class="bg-blue-500 text-white">
+        <tr>
+          <th class="py-2 px-4 text-left">Date</th>
+          <th class="py-2 px-4 text-left">Litres</th>
+          <th class="py-2 px-4 text-left">Fat %</th>
+          <th class="py-2 px-4 text-left">Collection Point</th>
+          <th class="py-2 px-4 text-left">Collector</th>
+          <th class="py-2 px-4 text-left">Amount</th>
+          <th class="py-2 px-4 text-left">Paid?</th>
+          <th class="py-2 px-4 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in page_obj %}
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-2 px-4">{{ record.date_collected|date:"Y-m-d H:i" }}</td>
+          <td class="py-2 px-4">{{ record.quantity_litres }}</td>
+          <td class="py-2 px-4">{{ record.fat_content|default:"N/A" }}</td>
+          <td class="py-2 px-4">{{ record.collection_point.name|default:"N/A" }}</td>
+          <td class="py-2 px-4">{{ record.collector.get_full_name|default:"N/A" }}</td>
+          <td class="py-2 px-4 text-green-600">KSh {{ record.amount_payable_to_farmer }}</td>
+          <td class="py-2 px-4">
+            {% if record.is_paid %}
+              <span class="text-green-500 font-semibold">✔</span>
+            {% else %}
+              <span class="text-red-500 font-semibold">❌</span>
+            {% endif %}
+          </td>
+          <td class="py-2 px-4">
+            <a href="{% url 'milk_detail' record.id %}" class="text-sm bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700">View</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-4 flex justify-between items-center">
+    <div class="text-sm text-gray-600">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </div>
+    <div class="space-x-2">
+      {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}&month={{ month }}&year={{ year }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">Previous</a>
+      {% endif %}
+      {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}&month={{ month }}&year={{ year }}" class="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400">Next</a>
+      {% endif %}
+    </div>
+  </div>
+
+  {% else %}
+    <p class="text-gray-600 mt-4">No milk records found for this period.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

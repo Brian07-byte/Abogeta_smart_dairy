@@ -18,11 +18,17 @@ from django.contrib import admin
 from django.urls import path,include
 from django.shortcuts import redirect
 from auths import views as auths_views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auths/', include('auths.urls')),
+    path('farmer/', include('farmer.urls')),
+
     path('admin_dashboard/', include('admin_dashboard.urls')),
     
      path('', auths_views.home_redirect, name='home_redirect'),
 ]
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

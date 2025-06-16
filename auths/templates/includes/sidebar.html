@@ -1,98 +1,159 @@
 {% load static %}
-<aside class="w-64 h-screen bg-gradient-to-b from-white via-gray-50 to-gray-100 shadow-xl border-r border-gray-200 fixed top-0 left-0 z-30 flex flex-col p-6 overflow-y-auto">
+{% load humanize %}
+
+<!-- Sidebar -->
+<aside class="w-72 h-screen bg-gradient-to-b from-white via-gray-50 to-blue-50 shadow-xl border-r border-gray-200 fixed top-0 left-0 z-40 flex flex-col p-6 overflow-y-auto font-sans">
+
   <!-- Logo / Title -->
-  <div class="mb-8">
-    <h2 class="text-2xl font-bold text-blue-700 tracking-wide flex items-center gap-2 select-none">
-      <span class="text-3xl">📋</span> Menu
-    </h2>
+  <div class="mb-10 flex items-center gap-3 text-blue-800">
+    <img src="{% static 'img/dairy-logo.png' %}" alt="Logo" class="w-10 h-10">
+    <h1 class="text-2xl font-extrabold tracking-tight">Smart Dairy</h1>
   </div>
 
-<ul class="space-y-2 text-gray-700 text-base font-medium flex-1">
-  {% if request.user.is_authenticated %}
+  <ul class="space-y-4 text-[16px] text-gray-800 font-medium flex-1">
+
+    {% if request.user.is_authenticated %}
+    
+    <!-- ADMIN -->
     {% if request.user.role == 'admin' or request.user.is_superuser %}
-      <li>
-        <a href="{% url 'admin_dashboard' %}" class="sidebar-link {% if request.path == '/admin/' %}active{% endif %}">🏠 Dashboard</a>
-      </li>
-      <li>
-        <a href="{% url 'admin_dashboard:manage_users' %}" class="sidebar-link {% if 'manage-users' in request.path %}active{% endif %}">👥 Manage Users</a>
-      </li>
-<li class="relative group">
-  <a href="#" class="sidebar-link flex items-center justify-between">
-    🥛 Milk Overview
-    <svg class="w-4 h-4 ml-1 transform group-hover:rotate-180 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-    </svg>
-  </a>
-  <ul class="hidden group-hover:block bg-white shadow rounded absolute left-0 top-full mt-1 min-w-[180px] z-10">
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2">Admin Panel</li>
+
     <li>
-      <a href="{% url 'admin_dashboard:milk_overview' %}" class="block px-4 py-2 hover:bg-gray-100">📊 Overview</a>
+      <a href="{% url 'admin_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition {% if request.path == '/admin/' %}bg-blue-200 text-blue-800 font-semibold{% endif %}">
+        <span>📊</span> Dashboard
+      </a>
     </li>
+
     <li>
-      <a href="{% url 'admin_dashboard:farmer_summary' %}" class="block px-4 py-2 hover:bg-gray-100">🔍 Farmer Summary</a>
+      <a href="{% url 'admin_dashboard:manage_users' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition {% if 'manage-users' in request.path %}bg-blue-200 text-blue-800 font-semibold{% endif %}">
+        <span>👥</span> Manage Users
+      </a>
     </li>
-  </ul>
-</li>
 
-<!-- Sidebar Section: Payment -->
-<li class="ml-4">
-  <button
-    class="sidebar-link flex items-center justify-between w-full text-left focus:outline-none"
-    onclick="document.getElementById('payment-submenu').classList.toggle('hidden')"
-  >
-    💸 Payments
-    <svg class="w-4 h-4 ml-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-            d="M19 9l-7 7-7-7" />
-    </svg>
-  </button>
-  <ul id="payment-submenu" class="ml-4 mt-2 hidden text-sm">
-    <li class="mt-1">
-      <a href="{% url 'admin_dashboard:record_payment' %}" class="block text-gray-600 hover:text-green-600">➕ Record Payment</a>
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2 mt-6">Milk Management</li>
+
+    <li>
+      <a href="{% url 'admin_dashboard:milk_collection_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 transition">
+        <span>🥛</span> Admin Overview
+      </a>
     </li>
-    <li class="mt-1">
-      <a href="{% url 'admin_dashboard:collector_list' %}" class="block text-gray-600 hover:text-green-600">👷 Collectors' Payments</a>
+
+    <li>
+      <a href="{% url 'admin_dashboard:add_milk_collection' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-green-100 text-green-700 transition">
+        <span>➕</span> Add Milk Collection
+      </a>
     </li>
-    <li class="mt-1">
-      <a href="{% url 'admin_dashboard:farmer_list' %}" class="block text-gray-600 hover:text-green-600">🌾 Farmers' Payments</a>
+
+    <li>
+      <a href="{% url 'admin_dashboard:milk_summary' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">
+        <span>📋</span> Milk Summary
+      </a>
     </li>
-    <li class="mt-1">
-      <a href="{% url 'admin_dashboard:rate_settings' %}" class="block text-gray-600 hover:text-green-600">⚙️ Rate Settings</a>
+
+    <li>
+      <a href="{% url 'admin_dashboard:manage_rates' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-purple-100 transition">
+        <span>💲</span> Rate Management
+      </a>
     </li>
-  </ul>
-</li>
 
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2 mt-6">Payments</li>
 
+    <li>
+      <a href="{% url 'admin_dashboard:payment_overview' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 transition">
+        <span>💳</span> Payment Overview
+      </a>
+    </li>
 
+    <li>
+      <a href="{% url 'admin_dashboard:farmer_payments' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-green-100 transition">
+        <span>🧑‍🌾</span> Farmer Payments
+      </a>
+    </li>
 
-      <li><a href="#" class="sidebar-link">📦 Inventory</a></li>
-      <li><a href="#" class="sidebar-link">📊 Analytics</a></li>
-      <li><a href="#" class="sidebar-link">📨 Messages</a></li>
-      <li>
-        <a href="{% url 'profile' %}" class="sidebar-link {% if request.path == '/profile/' %}active{% endif %}">👤 Profile</a>
-      </li>
+    <li>
+      <a href="{% url 'admin_dashboard:collector_payments_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">
+        <span>🧺</span> Collector Payments
+      </a>
+    </li>
 
-      {% elif request.user.role == 'collector' %}
-        <li><a href="#" class="sidebar-link">🏠 Dashboard</a></li>
-        <li><a href="#" class="sidebar-link">📋 Submit Milk Records</a></li>
-        <li><a href="#" class="sidebar-link">👨‍🌾 Farmers List</a></li>
-        <li><a href="#" class="sidebar-link">📊 Collection History</a></li>
-        <li><a href="{% url 'profile' %}" class="sidebar-link {% if request.path == '/profile/' %}active{% endif %}">👤 Profile</a></li>
+    <li>
+      <a href="{% url 'admin_dashboard:generate_payments' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-purple-100 transition">
+        <span>⚙️</span> Generate Payments
+      </a>
+    </li>
 
-      {% elif request.user.role == 'farmer' %}
-        <li><a href="#" class="sidebar-link">🏠 Dashboard</a></li>
-        <li><a href="#" class="sidebar-link">🥛 My Milk Records</a></li>
-        <li><a href="#" class="sidebar-link">🛒 Order Supplements</a></li>
-        <li><a href="#" class="sidebar-link">💰 Payment Status</a></li>
-        <li><a href="#" class="sidebar-link">📬 Notifications</a></li>
-        <li><a href="#" class="sidebar-link">✉️ Feedback</a></li>
-        <li><a href="{% url 'profile' %}" class="sidebar-link {% if request.path == '/profile/' %}active{% endif %}">👤 Profile</a></li>
-      {% endif %}
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2 mt-6">Inventory</li>
+
+    <li>
+      <a href="{% url 'admin_dashboard:supplement_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 transition">
+        <span>📦</span> Supplements
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'admin_dashboard:add_supplement' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-green-100 transition text-green-700">
+        <span>➕</span> Add Supplement
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'admin_dashboard:supplement_orders' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-gray-100 transition">
+        <span>🧾</span> Orders Summary
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'admin_dashboard:analytics_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">
+        <span>📈</span> Analytics
+      </a>
+    </li>
+
+    <li>
+      <a href="{% url 'inbox' %}" class="relative flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">
+        <span>📨</span> Feedback
+        {% if unread_feedback_count > 0 %}
+          <span class="absolute right-3 top-2 inline-flex items-center justify-center px-2 py-0.5 text-xs font-bold text-white bg-red-500 rounded-full">
+            {{ unread_feedback_count }}
+          </span>
+        {% endif %}
+      </a>
+    </li>
+
+    {% elif request.user.role == 'collector' %}
+    <!-- COLLECTOR MENU -->
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2">Collector Panel</li>
+
+    <li><a href="#" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">🏠 Dashboard</a></li>
+    <li><a href="#" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">📥 Submit Milk</a></li>
+    <li><a href="#" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">👨‍🌾 Farmer List</a></li>
+    <li><a href="#" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">📊 History</a></li>
+
+    {% elif request.user.role == 'farmer' %}
+    <!-- FARMER MENU -->
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2">Farmer Panel</li>
+
+    <li><a href="{% url 'farmer_dashboard' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition text-blue-700 font-semibold">🏠 Dashboard</a></li>
+    <li><a href="{% url 'milk_history' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">🥛 My Milk Records</a></li>
+    <li><a href="{% url 'supplement_list' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">📦 Order Supplements</a></li>
+    <li><a href="{% url 'order_summary' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-green-100 transition">🧾 Order Summary</a></li>
+    <li><a href="{% url 'my_payments' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">💰 My Payments</a></li>
+
+    <li class="text-gray-500 uppercase text-xs tracking-wider px-2 mt-6">Feedback</li>
+    <li><a href="{% url 'submit_feedback' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">✍️ Submit Feedback</a></li>
+    <li><a href="{% url 'feedback_sent' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">📤 Sent</a></li>
+    <li><a href="{% url 'feedback_received' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">📥 Received</a></li>
+    {% endif %}
+
+    <li><a href="{% url 'profile' %}" class="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-blue-100 transition">👤 Profile</a></li>
 
     {% endif %}
   </ul>
 
   <!-- Footer -->
-  <div class="text-xs text-gray-400 text-center pt-4 mt-8 border-t border-gray-200 select-none">
+  <div class="text-xs text-gray-500 text-center mt-auto pt-6 border-t border-gray-200">
     © {{ now.year }} Smart Dairy System
   </div>
 </aside>
+
+<!-- Alpine.js (for future interactivity) -->
+<script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>

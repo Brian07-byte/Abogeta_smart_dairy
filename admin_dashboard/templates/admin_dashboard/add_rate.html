@@ -1,0 +1,36 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block content %}
+<h2 class="text-xl font-bold mb-4">➕ Add New Rate</h2>
+
+<form method="post" class="bg-white p-6 rounded-lg shadow-md max-w-xl mx-auto">
+  {% csrf_token %}
+  
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700">Effective Date</label>
+    <input type="date" name="effective_date" required
+           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-200">
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700">Farmer Rate (per litre)</label>
+    <input type="number" step="0.01" name="farmer_rate" required
+           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-200">
+  </div>
+
+  <div class="mb-4">
+    <label class="block text-sm font-medium text-gray-700">Collector Rate (per litre)</label>
+    <input type="number" step="0.01" name="collector_rate" required
+           class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm px-3 py-2 focus:ring-blue-200">
+  </div>
+
+  <div class="mt-6">
+    <button type="submit"
+            class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+      💾 Save Rate
+    </button>
+    <a href="{% url 'admin_dashboard:rate_list' %}" 
+       class="ml-3 text-sm text-gray-600 hover:underline">← Back to Rate List</a>
+  </div>
+</form>
+{% endblock %}

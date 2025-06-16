@@ -1,0 +1,18 @@
+{% extends 'auths/admin_dashboard.html' %}
+{% block content %}
+<h2>Feedback Received</h2>
+<ul>
+  {% for f in feedbacks %}
+    <li>
+      From {{ f.sender.username }}: {{ f.message|truncatewords:10 }}
+      {% if not f.reply %}
+        <a href="{% url 'feedback_reply' f.id %}">Reply</a>
+      {% else %}
+        <strong>(Replied)</strong>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>No feedback received.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+
+<div class="container mx-auto px-4 py-6">
+  <h2 class="text-2xl font-bold text-gray-800 mb-4">
+    🥛 Milk Records for Payment — <span class="text-green-600">KSh {{ payment.net_amount }}</span>
+  </h2>
+
+  <a href="{% url 'my_payments' %}" class="text-blue-600 text-sm underline inline-block mb-6">
+    ← Back to My Payments
+  </a>
+
+  {% if milk_records %}
+    <div class="overflow-x-auto bg-white rounded shadow border border-gray-100">
+      <table class="min-w-full table-auto text-sm">
+        <thead class="bg-blue-600 text-white">
+          <tr>
+            <th class="py-3 px-4 text-left">Date</th>
+            <th class="py-3 px-4 text-left">Litres</th>
+            <th class="py-3 px-4 text-left">Fat %</th>
+            <th class="py-3 px-4 text-left">Collection Point</th>
+            <th class="py-3 px-4 text-left">Amount (KSh)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for record in milk_records %}
+          <tr class="border-b hover:bg-gray-50 transition">
+            <td class="py-2 px-4">{{ record.date_collected|date:"Y-m-d H:i" }}</td>
+            <td class="py-2 px-4">{{ record.quantity_litres }}</td>
+            <td class="py-2 px-4">{{ record.fat_content|default:"N/A" }}</td>
+            <td class="py-2 px-4">{{ record.collection_point.name|default:"N/A" }}</td>
+            <td class="py-2 px-4 text-green-700 font-semibold">KSh {{ record.amount_payable_to_farmer }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>
+          <tr class="bg-gray-100 font-semibold">
+            <td class="py-2 px-4 text-right" colspan="4">Total</td>
+            <td class="py-2 px-4 text-green-700">
+            <td class="py-2 px-4 text-green-700">KSh {{ total_amount }}</td>
+
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-gray-600 mt-6">No milk records attached to this payment.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

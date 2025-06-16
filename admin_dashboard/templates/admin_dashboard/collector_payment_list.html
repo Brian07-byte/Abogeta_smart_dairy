@@ -1,0 +1,44 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+    <h3 class="text-2xl font-bold text-indigo-700 mb-6"> Collector Payments Overview</h3>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow border border-gray-200">
+        <table class="min-w-full divide-y divide-gray-200 text-sm text-gray-700">
+            <thead class="bg-indigo-100 text-indigo-800 uppercase text-left">
+                <tr>
+                    <th class="px-4 py-3 font-semibold">Collector</th>
+                    <th class="px-4 py-3 font-semibold">Total Gross (KES)</th>
+                    <th class="px-4 py-3 font-semibold">Total Deduction (KES)</th>
+                    <th class="px-4 py-3 font-semibold">Total Net (KES)</th>
+                    <th class="px-4 py-3 font-semibold">Payments</th>
+                    <th class="px-4 py-3 font-semibold">Action</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+                {% for item in collector_data %}
+                <tr class="hover:bg-indigo-50 transition">
+                    <td class="px-4 py-3 font-medium">{{ item.collector.get_full_name|default:item.collector.username }}</td>
+                    <td class="px-4 py-3">KES {{ item.total_gross }}</td>
+                    <td class="px-4 py-3 text-red-500">KES {{ item.total_deductions }}</td>
+                    <td class="px-4 py-3 text-green-600">KES {{ item.total_net }}</td>
+                    <td class="px-4 py-3">{{ item.payment_count }}</td>
+                    <td class="px-4 py-3">
+                        <a href="{% url 'admin_dashboard:collector_payment_detail' item.collector.id %}"
+                           class="inline-flex items-center bg-indigo-600 text-white px-3 py-1.5 rounded text-sm font-medium hover:bg-indigo-700 transition">
+                             View Details
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center py-6 text-gray-400 italic">No collectors with payments found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

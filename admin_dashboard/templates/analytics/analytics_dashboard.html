@@ -1,0 +1,182 @@
+{% extends 'auths/base_dashboard.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container mx-auto px-4 py-6">
+  <h2 class="text-3xl font-semibold mb-6 text-gray-800">📊 System Analytics Dashboard</h2>
+
+  <!-- Milk Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Total Milk Collected</h4>
+      <p class="text-2xl font-bold text-green-600">{{ total_litres }} L</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Milk Collected This Month</h4>
+      <p class="text-2xl font-bold text-blue-600">{{ litres_this_month }} L</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Average Fat Content</h4>
+      <p class="text-2xl font-bold text-purple-600">{{ avg_fat|floatformat:2 }}%</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Available Balance</h4>
+      <p class="text-2xl font-bold text-orange-600">Ksh {{ available_balance }}</p>
+    </div>
+  </div>
+
+  <!-- Payment Summary -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Total Paid</h4>
+      <p class="text-2xl font-bold text-green-500">Ksh {{ total_paid }}</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Total Pending</h4>
+      <p class="text-2xl font-bold text-red-500">Ksh {{ total_pending }}</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Average Payment</h4>
+      <p class="text-2xl font-bold text-yellow-500">Ksh {{ avg_payment|floatformat:2 }}</p>
+    </div>
+  </div>
+
+  <!-- Revenue Breakdown -->
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Gross Amount</h4>
+      <p class="text-xl font-semibold text-gray-800">Ksh {{ gross_amount }}</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Farmer Deductions</h4>
+      <p class="text-xl font-semibold text-yellow-700">Ksh {{ farmer_ded }}</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Collector Deductions</h4>
+      <p class="text-xl font-semibold text-red-600">Ksh {{ collector_ded }}</p>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg text-center">
+      <h4 class="text-sm text-gray-500">Net Amount</h4>
+      <p class="text-xl font-semibold text-green-600">Ksh {{ net_amount }}</p>
+    </div>
+  </div>
+
+  <!-- Orders Summary -->
+  <div class="bg-white shadow p-4 rounded-lg mb-8">
+    <h4 class="text-lg font-semibold text-gray-700 mb-4"> Supplement Orders Summary</h4>
+    <p>Total Orders: <strong>{{ total_orders }}</strong></p>
+    <p>Orders This Month: <strong>{{ orders_this_month }}</strong></p>
+    <ul class="mt-2">
+      {% for item in order_status_counts %}
+        <li>{{ item.status|title }}: <strong>{{ item.count }}</strong></li>
+      {% endfor %}
+    </ul>
+    <p class="mt-2">Revenue from Supplements: <strong class="text-green-600">Ksh {{ supplement_revenue }}</strong></p>
+  </div>
+
+  <!-- Top Farmers and Collectors -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-white shadow p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-gray-700 mb-3"> Top 5 Farmers</h4>
+      <ul>
+        {% for farmer in top_farmers %}
+          <li class="py-1 border-b">{{ farmer.farmer__username }} – <strong>{{ farmer.total }} L</strong></li>
+        {% endfor %}
+      </ul>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-gray-700 mb-3"> Top 5 Collectors</h4>
+      <ul>
+        {% for collector in top_collectors %}
+          <li class="py-1 border-b">{{ collector.collector__username }} – <strong>{{ collector.total }} L</strong></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <!-- Stock Summary -->
+  <div class="bg-white shadow p-4 rounded-lg mb-10">
+    <h4 class="text-lg font-semibold text-gray-700 mb-3">Stock Summary</h4>
+    <p class="mb-2">Out of Stock Items: <strong class="text-red-600">{{ out_of_stock }}</strong></p>
+    <table class="table-auto w-full text-sm">
+      <thead>
+        <tr class="text-left text-gray-500 border-b">
+          <th class="px-2 py-1">Supplement</th>
+          <th class="px-2 py-1">Stock Level</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in stock_summary %}
+        <tr class="border-t">
+          <td class="px-2 py-1">{{ item.name }}</td>
+          <td class="px-2 py-1">{{ item.stock }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Charts -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white shadow p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-gray-700 mb-3">Milk Collection by Top Farmers</h4>
+      <canvas id="milkChart" class="w-full h-64"></canvas>
+    </div>
+    <div class="bg-white shadow p-4 rounded-lg">
+      <h4 class="text-lg font-semibold text-gray-700 mb-3">Payment Breakdown</h4>
+      <canvas id="paymentPie" class="w-full h-64"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- Chart.js CDN -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Milk Chart
+  const milkCtx = document.getElementById('milkChart').getContext('2d');
+  new Chart(milkCtx, {
+    type: 'bar',
+    data: {
+      labels: [{% for f in top_farmers %}'{{ f.farmer__username }}',{% endfor %}],
+      datasets: [{
+        label: 'Milk Collected (L)',
+        data: [{% for f in top_farmers %}{{ f.total }},{% endfor %}],
+        backgroundColor: 'rgba(59, 130, 246, 0.6)',
+        borderColor: 'rgba(59, 130, 246, 1)',
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
+
+  // Payment Pie
+  const pieCtx = document.getElementById('paymentPie').getContext('2d');
+  new Chart(pieCtx, {
+    type: 'pie',
+    data: {
+      labels: ['Gross Amount', 'Farmer Deductions', 'Collector Deductions', 'Net Amount'],
+      datasets: [{
+        data: [{{ gross_amount }}, {{ farmer_ded }}, {{ collector_ded }}, {{ net_amount }}],
+        backgroundColor: [
+          'rgba(99, 102, 241, 0.6)',
+          'rgba(234, 179, 8, 0.6)',
+          'rgba(239, 68, 68, 0.6)',
+          'rgba(16, 185, 129, 0.6)'
+        ],
+        borderColor: [
+          'rgba(99, 102, 241, 1)',
+          'rgba(234, 179, 8, 1)',
+          'rgba(239, 68, 68, 1)',
+          'rgba(16, 185, 129, 1)'
+        ],
+        borderWidth: 1
+      }]
+    },
+    options: { responsive: true }
+  });
+
+</script>
+{% endblock %}

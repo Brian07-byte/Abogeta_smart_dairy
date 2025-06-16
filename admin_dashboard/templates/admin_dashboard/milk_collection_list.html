@@ -1,0 +1,96 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block content %}
+<div class="p-6 bg-white rounded shadow-md">
+  <h2 class="text-2xl font-bold text-gray-800 mb-6"> Milk Collection Records</h2>
+
+  <!-- Filter & Search -->
+  <form method="get" class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Search Name</label>
+      <input type="text" name="q" value="{{ query }}" placeholder="Farmer or Collector"
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">Start Date</label>
+      <input type="date" name="start_date" value="{{ start_date }}"
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700">End Date</label>
+      <input type="date" name="end_date" value="{{ end_date }}"
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring focus:ring-blue-200">
+    </div>
+    <div class="flex items-end">
+      <button type="submit"
+              class="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">🔍 Filter</button>
+    </div>
+    {% if query or start_date or end_date %}
+    <div class="flex items-end">
+      <a href="{% url 'admin_dashboard:milk_collection_list' %}"
+         class="w-full px-4 py-2 bg-gray-300 text-gray-800 rounded-md hover:bg-gray-400 transition">❌ Reset</a>
+    </div>
+    {% endif %}
+  </form>
+
+  <!-- Record Count -->
+  <p class="text-sm text-gray-600 mb-4">
+    Showing <span class="font-medium">{{ page_obj.paginator.count }}</span> record{{ page_obj.paginator.count|pluralize }}.
+  </p>
+
+  <!-- Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 border rounded-md">
+      <thead class="bg-blue-600 text-white text-sm">
+        <tr>
+          <th class="px-6 py-3 text-left font-semibold">Date</th>
+          <th class="px-6 py-3 text-left font-semibold">Farmer</th>
+          <th class="px-6 py-3 text-left font-semibold">Collector</th>
+          <th class="px-6 py-3 text-left font-semibold">Quantity (L)</th>
+          <th class="px-6 py-3 text-left font-semibold">Fat %</th>
+          <th class="px-6 py-3 text-left font-semibold">Farmer Payment</th>
+          <th class="px-6 py-3 text-left font-semibold">Collector Commission</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-100 bg-white text-gray-800">
+        {% for item in page_obj %}
+        <tr class="hover:bg-blue-50">
+          <td class="px-6 py-4">
+            <a href="{% url 'admin_dashboard:milk_collection_detail' item.id %}" class="text-blue-600 hover:underline">
+              {{ item.date_collected|date:"Y-m-d H:i" }}
+            </a>
+          </td>
+          <td class="px-6 py-4">{{ item.farmer.username }}</td>
+          <td class="px-6 py-4">{{ item.collector.username }}</td>
+          <td class="px-6 py-4">{{ item.quantity_litres }}</td>
+          <td class="px-6 py-4">{{ item.fat_content|default:"-" }}</td>
+          <td class="px-6 py-4 text-green-600 font-semibold">Ksh {{ item.amount_payable_to_farmer }}</td>
+          <td class="px-6 py-4 text-purple-600 font-semibold">Ksh {{ item.commission_payable_to_collector }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="7" class="text-center py-6 text-gray-500">No milk collection records found.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="mt-6 flex justify-center items-center space-x-2 text-sm">
+    {% if page_obj.has_previous %}
+      <a href="?{% if query %}q={{ query }}&{% endif %}{% if start_date %}start_date={{ start_date }}&{% endif %}{% if end_date %}end_date={{ end_date }}&{% endif %}page={{ page_obj.previous_page_number }}"
+         class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">⬅ Previous</a>
+    {% endif %}
+
+    <span class="px-4 py-2 bg-blue-500 text-white rounded">
+      Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+      <a href="?{% if query %}q={{ query }}&{% endif %}{% if start_date %}start_date={{ start_date }}&{% endif %}{% if end_date %}end_date={{ end_date }}&{% endif %}page={{ page_obj.next_page_number }}"
+         class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next ➡</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

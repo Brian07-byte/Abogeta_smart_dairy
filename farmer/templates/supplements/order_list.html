@@ -1,0 +1,52 @@
+{% extends 'auths/admin_dashboard.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-6xl mx-auto p-6 mt-10 bg-white rounded shadow-md">
+    <h2 class="text-3xl font-bold text-green-600 mb-6">📦 My Orders</h2>
+
+    {% if orders %}
+        <div class="space-y-8">
+            {% for order in orders %}
+                <div class="border rounded-lg p-4 shadow-sm bg-gray-50">
+                    <div class="mb-2">
+                        <p><strong>🆔 Order ID:</strong> {{ order.id }}</p>
+                        <p><strong>👤 User:</strong> {{ order.user.username }}</p>
+                        <p><strong>💳 Payment Method:</strong> {{ order.get_payment_method_display }}</p>
+                        <p><strong>📅 Placed:</strong> {{ order.created_at|date:"M d, Y H:i" }}</p>
+                        <p><strong>💰 Total Price:</strong> KES {{ order.total_price }}</p>
+                        <p><strong>📌 Status:</strong> 
+                            <span class="{% if order.status == 'paid' %}text-green-600{% else %}text-yellow-500{% endif %}">
+                                {{ order.status|capfirst }}
+                            </span>
+                        </p>
+                        {% if order.receipt_number %}
+                            <p><strong>📄 Receipt Number:</strong> {{ order.receipt_number }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div class="border-t mt-3 pt-3">
+                        <h4 class="text-lg font-semibold mb-2">🛒 Items</h4>
+                        <ul class="divide-y divide-gray-200">
+                            {% for item in order.cart_items.all %}
+                                <li class="py-2 flex justify-between">
+                                    <span>{{ item.quantity }} × {{ item.supplement.name }}</span>
+                                    <span>KES {{ item.get_total_price }}</span>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="text-red-500">❌ You have not placed any orders yet.</p>
+    {% endif %}
+
+    <div class="mt-6">
+        <a href="{% url 'supplement_list' %}" class="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            ← Back to Shop
+        </a>
+    </div>
+</div>
+{% endblock %}

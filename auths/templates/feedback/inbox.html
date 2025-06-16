@@ -1,0 +1,30 @@
+{% extends 'auths/base_dashboard.html' %}
+{% load humanize %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto mt-10">
+  <h2 class="text-2xl font-bold mb-4">Your Feedback Inbox</h2>
+  <p class="mb-4 text-gray-600">Unread Messages: {{ unread_count }}</p>
+
+  {% if feedbacks %}
+    <ul class="space-y-4">
+      {% for fb in feedbacks %}
+        <li class="p-4 rounded shadow bg-{{ fb.is_read|yesno:'white,indigo-50' }}">
+          <a href="{% url 'feedback_detail' fb.id %}" class="block">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>From: {{ fb.sender.username }}</span>
+              <span>{{ fb.timestamp|naturaltime }}</span>
+            </div>
+            <p class="mt-1 text-gray-800">{{ fb.message|truncatewords:10 }}</p>
+            {% if fb.reply %}
+              <p class="mt-1 text-green-600">✅ You replied</p>
+            {% endif %}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-gray-500">No feedback yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

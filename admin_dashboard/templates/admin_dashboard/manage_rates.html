@@ -1,0 +1,45 @@
+{% extends 'auths/base_dashboard.html' %}
+{% block content %}
+
+<div class="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow">
+  <h2 class="text-2xl font-bold mb-6">Manage Active Milk Rates</h2>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="mb-4 p-3 rounded bg-green-100 text-green-800">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Effective Date</label>
+      <input type="date" name="effective_date" value="{{ current_rates.farmer.effective_date|default:today }}" required class="w-full mt-1 border rounded px-3 py-2">
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Farmer Rate -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Farmer Rate (per litre)</label>
+        <input type="number" step="0.01" name="farmer_rate" required
+               value="{{ current_rates.farmer.rate_per_litre|default:'' }}"
+               class="mt-1 block w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Collector Rate -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Collector Rate (per litre)</label>
+        <input type="number" step="0.01" name="collector_rate" required
+               value="{{ current_rates.collector.rate_per_litre|default:'' }}"
+               class="mt-1 block w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+    </div>
+
+    <div class="mt-6">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"> Save Rates</button>
+    </div>
+  </form>
+</div>
+
+{% endblock %}

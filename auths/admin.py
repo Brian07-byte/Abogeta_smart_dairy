@@ -15,3 +15,7 @@ class NotificationAdmin(admin.ModelAdmin):
       list_display = ["user",'message', 'is_read', "timestamp"]
       fields = ("user", "message", "")
       admin.site.register(Notification,)
+      
+from .models import Feedback
+
+admin.site.register(Feedback)

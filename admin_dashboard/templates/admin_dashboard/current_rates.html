@@ -1,0 +1,26 @@
+{% extends 'auths/base_dashboard.html' %}
+
+{% block title %}Current Rates{% endblock %}
+{% block content %}
+<h2>Current Milk & Commission Rates</h2>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Milk Rate (per litre)</th>
+            <th>Commission Rate (%)</th>
+            <th>Effective Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for rate in rates %}
+        <tr>
+            <td>{{ rate.milk_rate }}</td>
+            <td>{{ rate.commission_rate }}</td>
+            <td>{{ rate.created_at|date:"Y-m-d" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="3">No rates set yet.</td></tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

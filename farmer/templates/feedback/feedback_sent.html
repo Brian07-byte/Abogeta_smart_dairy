@@ -1,0 +1,11 @@
+{% extends 'auths/admin_dashboard.html' %}
+{% block content %}
+<h2>Feedback Sent</h2>
+<ul>
+  {% for f in feedbacks %}
+    <li>To {{ f.recipient.username }} - {{ f.message|truncatewords:10 }} ({{ f.timestamp }})</li>
+  {% empty %}
+    <li>No feedback sent.</li>
+  {% endfor %}
+</ul>
+{% endblock %}
